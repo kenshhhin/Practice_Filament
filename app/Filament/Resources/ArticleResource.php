@@ -22,7 +22,11 @@ class ArticleResource extends Resource
 {
     protected static ?string $model = Article::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
+    protected static ?string $navigationLabel = 'Articles';
+    protected static ?string $modelLabel = ' Articles';
+    protected static ?string $pluralModelLabel = 'Articles';
+    protected static ?string $navigationGroup = 'Content';
 
     public static function form(Form $form): Form
     {
@@ -52,8 +56,8 @@ class ArticleResource extends Resource
                 TinyEditor::make('detail_text')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('tags'),
-                Forms\Components\TextInput::make('category_id')
+                Forms\Components\TagsInput::make('tags'),
+                Forms\Components\Select::make('category_id')
                     ->options(static::categoryOptions())
                     ->required(),
                 Forms\Components\DateTimePicker::make('published_at')
@@ -78,7 +82,7 @@ class ArticleResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('preview_image'),
                 Tables\Columns\ImageColumn::make('detail_image'),
-                Tables\Columns\TextColumn::make('category_id')
+                Tables\Columns\TextColumn::make('category.title')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('published_at')
@@ -122,5 +126,9 @@ class ArticleResource extends Resource
             'create' => Pages\CreateArticle::route('/create'),
             'edit' => Pages\EditArticle::route('/{record}/edit'),
         ];
+    }
+
+    public static function categoryOptions() {
+        return ArticleCategory::pluck('title', 'id');
     }
 }

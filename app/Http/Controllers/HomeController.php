@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(){
-        return 'home';
+    public function index() {
+        $pageTitle = 'Home';
+        $articles = Article::where('active', true)->latest('published_at')->paginate(6);
+        return view('index', compact('articles', 'pageTitle'));
     }
 
     public function about(){
